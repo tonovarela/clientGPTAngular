@@ -19,7 +19,8 @@
     "module": "ES2022",
     "baseUrl": ".",
     "paths": {      
-      "@env/*": ["src/environments/*"],
+      "@env/*": ["src/environments/*"],      
+      "@use-cases/*": ["src/app/core/use-cases/*"],
       "@layouts/*": ["src/app/presentation/layouts/*"],
       "@interfaces/*": ["src/app/core/interfaces/*"],
       "@services/*": ["src/app/core/presentation/services/*"],      

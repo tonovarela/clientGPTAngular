@@ -1,12 +1,12 @@
-<div class="chat-container">
-    <div class="chat-messages">
-        <div class="grid gap-y-2">            
+<div class="chat-container"   >
+    <div class="chat-messages" #chatContainer>
+        <div class="grid gap-y-2" >            
             @for(message of messages();track $index) {
             @if(message.isGpt){
-            <chat-message [text]="message.text" />
+                <gpt-message-orthography [message]="message" ></gpt-message-orthography>            
             }
             @else{
-            <my-message [text]="message.text" />
+            <my-message  [text]="message.text" />
             }
             }            
             @if (isLoading()){

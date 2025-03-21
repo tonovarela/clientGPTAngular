@@ -1,45 +1,143 @@
-import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
-import { ChatMessageComponent } from '@components/chat-bubbles/chatMessage/chatMessage.component';
+import {  AfterViewChecked, AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, inject, OnInit, signal, ViewChild } from '@angular/core';
 import { MyMessageComponent } from '@components/chat-bubbles/myMessage/myMessage.component';
 import { TextMessageBoxComponent } from '@components/text-boxes/textMessageBox/textMessageBox.component';
-import { TextMessageBoxFileComponent, TextMessageEvent } from '@components/text-boxes/textMessageBoxFile/textMessageBoxFile.component';
 import { TypingLoaderComponent } from '@components/typingLoader/typingLoader.component';
-import { TextMessageBoxEvent, TextMessageBoxSelectComponent } from '../../components/text-boxes/textMessageBoxSelect/textMessageBoxSelect.component';
+import { GptMessageOrthographyComponent } from '@components/chat-bubbles/gpt-messageOrthography/gpt-messageOrthography.component';
 import { Message } from 'src/app/interfaces';
 import { OpenAiService } from '../../services/openai.service';
-
-
 
 
 @Component({
   selector: 'app-orthography-page',
   imports: [
-    ChatMessageComponent,
     MyMessageComponent,
-    TextMessageBoxComponent,    
+    GptMessageOrthographyComponent,
+    TextMessageBoxComponent,
     TypingLoaderComponent,
-    
+
   ],
-  templateUrl: './orthographyPage.component.html',  
+  templateUrl: './orthographyPage.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export default class OrthographyPageComponent { 
-
-  public messages =signal<Message[]>([{
-    text: 'Hola, soy tu asistente virtual, ¿en qué puedo ayudarte hoy?',
-    isGpt:true
-  }]);
-
-  public openAiService= inject(OpenAiService);
+export default class OrthographyPageComponent implements AfterViewInit {
+  
+  @ViewChild('chatContainer') public  chatContainer!: ElementRef;
+  
+  public openAiService = inject(OpenAiService);  
   
   public isLoading = signal<boolean>(false);
 
+  public messages = signal<Message[]>([
+    {
+      text: 'Hola, ¿en qué puedo ayudarte?',
+      isGpt: true
+    },
+    {
+      text: 'Hola, ¿en qué puedo ayudarte?',
+      isGpt: false},
+      {
+        text: 'Hola, ¿en qué puedo ayudarte?',
+        isGpt: true
+      },
+      {
+        text: 'Hola, ¿en qué puedo ayudarte?',
+        isGpt: true
+      },
+      {
+        text: 'Hola, ¿en qué puedo ayudarte?',
+        isGpt: false},
+        {
+          text: 'Hola, ¿en qué puedo ayudarte?',
+          isGpt: true
+        },
+        {
+          text: 'Hola, ¿en qué puedo ayudarte?',
+          isGpt: true
+        },
+        {
+          text: 'Hola, ¿en qué puedo ayudarte?',
+          isGpt: false},
+          {
+            text: 'Hola, ¿en qué puedo ayudarte?',
+            isGpt: true
+          },
+          {
+            text: 'Hola, ¿en qué puedo ayudarte?',
+            isGpt: true
+          },
+          {
+            text: 'Hola, ¿en qué puedo ayudarte?',
+            isGpt: false},
+            {
+              text: 'Hola, ¿en qué puedo ayudarte?',
+              isGpt: true
+            },{
+              text: 'Hola, ¿en qué puedo ayudarte?',
+              isGpt: true
+            },
+            {
+              text: 'Hola, ¿en qué puedo ayudarte?',
+              isGpt: false},
+              {
+                text: 'Hola, ¿en qué puedo ayudarte?',
+                isGpt: true
+              }
+  ]);
+  scrollToBottom(): void {
+    try {
+      if (this.chatContainer) {
+        const element = this.chatContainer.nativeElement;
+        element.scrollTo({
+          top: element.scrollHeight +200,
+          behavior: 'smooth'
+        });
+      }
+      console.log('scrolling'); 
 
-
-
-  handleMessage(promt: string) {
-    console.log(promt);
+    } catch (err) {
+      console.error('Error al hacer scroll:', err);
+    }
   }
+
+  ngAfterViewInit(): void {
+    this.scrollToBottom();
+  }
+
+  
+
+  handleMessage(promt: string) {    
+    
+    this.messages.update((prev) => [...prev,
+    {
+      text: promt,
+      isGpt: false
+    }
+    ]);
+    this.isLoading.set(true);    
+    setTimeout(() => {
+      this.scrollToBottom();
+      
+    }, 100);
+    
+    this.openAiService.checkOrthography(promt).subscribe((response) => {
+      this.isLoading.set(false);
+      this.messages.update((prev) => [
+        ...prev,
+        {
+          isGpt: true,
+          text: response.message,
+          info: response
+        }
+      ]);
+      setTimeout(() => {
+        this.scrollToBottom();
+        
+      }, 100);
+      
+    });
+
+  };
+
 
 
 

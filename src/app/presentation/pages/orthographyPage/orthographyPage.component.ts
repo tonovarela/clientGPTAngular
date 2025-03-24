@@ -1,4 +1,4 @@
-import {  AfterViewChecked, AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, inject, OnInit, signal, ViewChild } from '@angular/core';
+import { AfterViewChecked, AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, inject, OnInit, signal, ViewChild } from '@angular/core';
 import { MyMessageComponent } from '@components/chat-bubbles/myMessage/myMessage.component';
 import { TextMessageBoxComponent } from '@components/text-boxes/textMessageBox/textMessageBox.component';
 import { TypingLoaderComponent } from '@components/typingLoader/typingLoader.component';
@@ -20,11 +20,11 @@ import { OpenAiService } from '../../services/openai.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export default class OrthographyPageComponent implements AfterViewInit {
-  
-  @ViewChild('chatContainer') public  chatContainer!: ElementRef;
-  
-  public openAiService = inject(OpenAiService);  
-  
+
+  @ViewChild('chatContainer') public chatContainer!: ElementRef;
+
+  public openAiService = inject(OpenAiService);
+
   public isLoading = signal<boolean>(false);
 
   public messages = signal<Message[]>([
@@ -34,65 +34,19 @@ export default class OrthographyPageComponent implements AfterViewInit {
     },
     {
       text: 'Hola, ¿en qué puedo ayudarte?',
-      isGpt: false},
-      {
-        text: 'Hola, ¿en qué puedo ayudarte?',
-        isGpt: true
-      },
-      {
-        text: 'Hola, ¿en qué puedo ayudarte?',
-        isGpt: true
-      },
-      {
-        text: 'Hola, ¿en qué puedo ayudarte?',
-        isGpt: false},
-        {
-          text: 'Hola, ¿en qué puedo ayudarte?',
-          isGpt: true
-        },
-        {
-          text: 'Hola, ¿en qué puedo ayudarte?',
-          isGpt: true
-        },
-        {
-          text: 'Hola, ¿en qué puedo ayudarte?',
-          isGpt: false},
-          {
-            text: 'Hola, ¿en qué puedo ayudarte?',
-            isGpt: true
-          },
-          {
-            text: 'Hola, ¿en qué puedo ayudarte?',
-            isGpt: true
-          },
-          {
-            text: 'Hola, ¿en qué puedo ayudarte?',
-            isGpt: false},
-            {
-              text: 'Hola, ¿en qué puedo ayudarte?',
-              isGpt: true
-            },{
-              text: 'Hola, ¿en qué puedo ayudarte?',
-              isGpt: true
-            },
-            {
-              text: 'Hola, ¿en qué puedo ayudarte?',
-              isGpt: false},
-              {
-                text: 'Hola, ¿en qué puedo ayudarte?',
-                isGpt: true
-              }
+      isGpt: false
+    }
   ]);
   scrollToBottom(): void {
     try {
       if (this.chatContainer) {
         const element = this.chatContainer.nativeElement;
         element.scrollTo({
-          top: element.scrollHeight +200,
+          top: element.scrollHeight + 200,
           behavior: 'smooth'
         });
       }
-      console.log('scrolling'); 
+      console.log('scrolling');
 
     } catch (err) {
       console.error('Error al hacer scroll:', err);
@@ -103,22 +57,22 @@ export default class OrthographyPageComponent implements AfterViewInit {
     this.scrollToBottom();
   }
 
-  
 
-  handleMessage(promt: string) {    
-    
+
+  handleMessage(promt: string) {
+
     this.messages.update((prev) => [...prev,
     {
       text: promt,
       isGpt: false
     }
     ]);
-    this.isLoading.set(true);    
+    this.isLoading.set(true);
     setTimeout(() => {
       this.scrollToBottom();
-      
+
     }, 100);
-    
+
     this.openAiService.checkOrthography(promt).subscribe((response) => {
       this.isLoading.set(false);
       this.messages.update((prev) => [
@@ -131,9 +85,9 @@ export default class OrthographyPageComponent implements AfterViewInit {
       ]);
       setTimeout(() => {
         this.scrollToBottom();
-        
+
       }, 100);
-      
+
     });
 
   };

@@ -1,1 +1,22 @@
-<p>prosConPage works!</p>,
+<div class="chat-container">
+    <div class="chat-messages">
+        <div class="grid gap-y-2">
+            <!-- Chat messages-->
+            @for(message of messages();track $index) {
+            @if(message.isGpt){
+            <chat-message [text]="message.text" />
+            }
+            @else{
+            <my-message [text]="message.text" />
+            }
+            }
+            
+            @if (isLoading()){
+            <typing-loader />
+            }
+        </div>
+    </div>
+    <text-message-box  placeholder="Que deseas comparar?"  (onMessage)="handleMessage($event)" />
+    
+
+</div>

@@ -5,8 +5,8 @@ import { ChatMessageComponent } from '@components/chat-bubbles/chatMessage/chatM
 import { MyMessageComponent } from '@components/chat-bubbles/myMessage/myMessage.component';
 import { TypingLoaderComponent } from '@components/typingLoader/typingLoader.component';
 import { TextMessageBoxEvent, TextMessageBoxSelectComponent } from '@components/text-boxes/textMessageBoxSelect/textMessageBoxSelect.component';
-import { CommonModule } from '@angular/common';
 
+  
 
 @Component({
   selector: 'app-text-to-audio-page',
